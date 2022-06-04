@@ -10,22 +10,29 @@ argmin = np.argmin
 array_min = np.min
 array_max = np.max
 
-print('array', array_min)
-
 logger = logging.getLogger("dtw.distance")
 
 inf = float("inf")
 
 
-
 def ub_euclidean(s1, s2):
-    """ See ed.euclidean_distance"""
+    """See ed.euclidean_distance"""
     return distance(s1, s2)
 
-def dtwdistance(s1, s2,
-             window=None, max_dist=None, max_step=None,
-             max_length_diff=None, penalty=None, psi=None,
-             use_c=False, use_pruning=False, only_ub=False):
+
+def dtwdistance(
+    s1,
+    s2,
+    window=None,
+    max_dist=None,
+    max_step=None,
+    max_length_diff=None,
+    penalty=None,
+    psi=None,
+    use_c=False,
+    use_pruning=False,
+    only_ub=False,
+):
     """
     Dynamic Time Warping.
     This function keeps a compact matrix, not the full warping paths matrix.
@@ -67,7 +74,7 @@ def dtwdistance(s1, s2,
     else:
         max_step *= max_step
     if use_pruning or only_ub:
-        max_dist = ub_euclidean(s1, s2)**2
+        max_dist = ub_euclidean(s1, s2) ** 2
         if only_ub:
             return max_dist
     elif not max_dist:
@@ -82,8 +89,7 @@ def dtwdistance(s1, s2,
     if psi is None:
         psi = 0
     length = min(c + 1, abs(r - c) + 2 * (window - 1) + 1 + 1 + 1)
-    # print("length (py) = {}".format(length))
-    dtw = array.array('d', [inf] * (2 * length))
+    dtw = array.array("d", [inf] * (2 * length))
     sc = 0
     ec = 0
     ec_next = 0
@@ -95,13 +101,11 @@ def dtwdistance(s1, s2,
     i1 = 0
     psi_shortest = inf
     for i in range(r):
-        # print("i={}".format(i))
-        # print(dtw)
         skipp = skip
         skip = max(0, i - max(0, r - c) - window + 1)
         i0 = 1 - i0
         i1 = 1 - i1
-        for ii in range(i1*length, i1*length+length):
+        for ii in range(i1 * length, i1 * length + length):
             dtw[ii] = inf
         j_start = max(0, i - max(0, r - c) - window + 1)
         j_end = min(c, i + max(0, c - r) + window)
@@ -114,20 +118,18 @@ def dtwdistance(s1, s2,
         if psi != 0 and j_start == 0 and i < psi:
             dtw[i1 * length] = 0
         for j in range(j_start, j_end):
-            d = (s1[i] - s2[j])**2
+            d = (s1[i] - s2[j]) ** 2
             if d > max_step:
                 continue
             assert j + 1 - skip >= 0
             assert j - skipp >= 0
             assert j + 1 - skipp >= 0
             assert j - skip >= 0
-            dtw[i1 * length + j + 1 - skip] = d + min(dtw[i0 * length + j - skipp],
-                                                      dtw[i0 * length + j + 1 - skipp] + penalty,
-                                                      dtw[i1 * length + j - skip] + penalty)
-            # print('({},{}), ({},{}), ({},{})'.format(i0, j - skipp, i0, j + 1 - skipp, i1, j - skip))
-            # print('{}, {}, {}'.format(dtw[i0, j - skipp], dtw[i0, j + 1 - skipp], dtw[i1, j - skip]))
-            # print('i={}, j={}, d={}, skip={}, skipp={}'.format(i,j,d,skip,skipp))
-            # print(dtw)
+            dtw[i1 * length + j + 1 - skip] = d + min(
+                dtw[i0 * length + j - skipp],
+                dtw[i0 * length + j + 1 - skipp] + penalty,
+                dtw[i1 * length + j - skip] + penalty,
+            )
             if dtw[i1 * length + j + 1 - skip] > max_dist:
                 if not smaller_found:
                     sc = j + 1
@@ -143,17 +145,9 @@ def dtwdistance(s1, s2,
         d = dtw[i1 * length + min(c, c + window - 1) - skip]
     else:
         ic = min(c, c + window - 1) - skip
-        vc = dtw[i1 * length + ic - psi:i1 * length + ic + 1]
-        print('vc', vc)
+        vc = dtw[i1 * length + ic - psi : i1 * length + ic + 1]
         d = min(array_min(vc), psi_shortest)
     if max_dist and d > max_dist:
         d = inf
     d = math.sqrt(d)
     return d
-
-
-s1 = [0., 0, 1, 2, 1, 0, 1, 0, 0, 2, 1, 0, 0]
-s2 = [0., 1, 2, 3, 1, 0, 0, 0, 2, 1, 0, 0, 0]
-
-
-print(dtwdistance(s1, s2))

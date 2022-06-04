@@ -1,9 +1,9 @@
 from typing import List
-from utils.angle import find_angle
 from getImagePose import image_pose_x, image_pose_y
 from dtwCalculator import calculateDistance
 
 down = False
+
 
 def getResult(results) -> List[str]:
     vector_x = []
@@ -15,10 +15,4 @@ def getResult(results) -> List[str]:
 
     xDistance = calculateDistance(vector_x, image_pose_x)
     yDistance = calculateDistance(vector_y, image_pose_y)
-
-    # print("xDistance: ", xDistance, " yDistance: ", yDistance)
     return []
-            
-
-
-        

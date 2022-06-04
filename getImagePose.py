@@ -12,7 +12,7 @@ pose = mp_pose.Pose(
     min_tracking_confidence=min_tracking_confidence,
 )
 
-image = cv.imread('images/mountainPose.jpg')
+image = cv.imread("images/mountainPose.jpg")
 
 results = pose.process(image)
 
@@ -22,4 +22,3 @@ image_pose_y = []
 for i in range(33):
     image_pose_x.append(results.pose_landmarks.landmark[i].x)
     image_pose_y.append(results.pose_landmarks.landmark[i].y)
-
