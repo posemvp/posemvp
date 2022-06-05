@@ -1,5 +1,6 @@
 pandas==1.4.2
 mediapipe==0.8.10
-dtaidistance==2.3.6
+fastdtw==0.3.4
+scipy==1.8.1
 opencv-python==4.5.5.64
 protobuf==3.20.*

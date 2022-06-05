@@ -40,8 +40,8 @@ if __name__ == "__main__":
     min_tracking_confidence = args.min_tracking_confidence
     use_brect = args.use_brect
 
-    cap = cv.VideoCapture(cap_device)
-    # cap = cv.VideoCapture("videos/mountain_pose.mp4")
+    # cap = cv.VideoCapture(cap_device)
+    cap = cv.VideoCapture("samples/videos/mountain_pose.mp4")
 
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
@@ -61,19 +61,18 @@ if __name__ == "__main__":
         debug_image = copy.deepcopy(image)
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         results = pose.process(image)
-        feedbackList = get_result(results)
-        if feedbackList is not None:
-            for feedback in feedbackList:
-                cv.putText(
-                    debug_image,
-                    str(feedback),
-                    (10, 60),
-                    cv.FONT_HERSHEY_SIMPLEX,
-                    1.0,
-                    (0, 0, 255),
-                    2,
-                    cv.LINE_AA,
-                )
+        feedback = get_result(results)
+        if feedback:
+            cv.putText(
+                debug_image,
+                str(feedback),
+                (10, 60),
+                cv.FONT_HERSHEY_SIMPLEX,
+                1.0,
+                (0, 0, 255),
+                2,
+                cv.LINE_AA,
+            )
         if results.pose_landmarks is not None:
             bounding_rectangle_score = calc_bounding_rect(
                 debug_image, results.pose_landmarks
