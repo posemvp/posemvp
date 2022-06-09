@@ -5,7 +5,6 @@ import mediapipe as mp
 
 from calc.cvfpscalc import CvFpsCalc
 from calc.utils import calc_bounding_rect
-from exercises_detector.yoga.mountain_pose import get_result
 from painter.draw import draw_bounding_rect
 from painter.landmarks import draw_landmarks
 
@@ -40,8 +39,8 @@ if __name__ == "__main__":
     min_tracking_confidence = args.min_tracking_confidence
     use_brect = args.use_brect
 
-    # cap = cv.VideoCapture(cap_device)
-    cap = cv.VideoCapture("samples/videos/mountain_pose.mp4")
+    cap = cv.VideoCapture(cap_device)
+    # cap = cv.VideoCapture("samples/videos/pushup.mp4")
 
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
@@ -61,18 +60,21 @@ if __name__ == "__main__":
         debug_image = copy.deepcopy(image)
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         results = pose.process(image)
-        feedback = get_result(results)
-        if feedback:
-            cv.putText(
-                debug_image,
-                str(feedback),
-                (10, 60),
-                cv.FONT_HERSHEY_SIMPLEX,
-                1.0,
-                (0, 0, 255),
-                2,
-                cv.LINE_AA,
-            )
+        # feedback = get_result(results)
+        # if feedback:
+        #     cv.putText(
+        #         debug_image,
+        #         str(feedback),
+        #         (10, 60),
+        #         cv.FONT_HERSHEY_SIMPLEX,
+        #         1.0,
+        #         (0, 0, 255),
+        #         2,
+        #         cv.LINE_AA,
+        #     )
+        for l in results.pose_landmarks.landmark:
+            print(l)
+        print('---------------------')
         if results.pose_landmarks is not None:
             bounding_rectangle_score = calc_bounding_rect(
                 debug_image, results.pose_landmarks
