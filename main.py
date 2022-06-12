@@ -6,6 +6,8 @@ import mediapipe as mp
 from calc.cvfpscalc import CvFpsCalc
 from painter.draw import draw_text
 from painter.landmarks import draw_landmarks
+from pose.compare import compare_pose
+from pose.landmarks import get_landmark_key_points
 
 
 def get_args():
@@ -37,8 +39,8 @@ if __name__ == "__main__":
     min_tracking_confidence = args.min_tracking_confidence
 
     # cap = cv.VideoCapture(cap_device)
-    cap = cv.VideoCapture("samples/videos/pushup.mp4")
-    # cap = cv.VideoCapture("samples/videos/mountain_pose.mp4")
+    # cap = cv.VideoCapture("samples/videos/pushup.mp4")
+    cap = cv.VideoCapture("samples/videos/mountain_pose.mp4")
 
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
@@ -57,9 +59,11 @@ if __name__ == "__main__":
         image = cv.flip(image, 1)
         debug_image = copy.deepcopy(image)
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
-        results = pose.process(image)
-        if results.pose_landmarks is not None:
-            debug_image = draw_landmarks(debug_image, results.pose_landmarks)
+        pose_landmarks = pose.process(image).pose_landmarks
+        if pose_landmarks is not None:
+            landmark_key_points = get_landmark_key_points(image, pose_landmarks)
+            compare_pose(landmark_key_points)
+            debug_image = draw_landmarks(debug_image, landmark_key_points)
         draw_text(debug_image, "FPS:" + str(display_fps), (10, 30), 1.0, 2)
         key = cv.waitKey(27)
         if key == 27:

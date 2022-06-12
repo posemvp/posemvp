@@ -3,7 +3,7 @@ from exercises_detector.detector import WorkoutDetector
 
 
 class PushUpDetector(WorkoutDetector):
-    def _get_result(self, poses) -> str:
+    def get_result(self, poses) -> str:
         feedbackList = []
         if (
             poses.pose_landmarks.landmark[11].visibility > 0.8

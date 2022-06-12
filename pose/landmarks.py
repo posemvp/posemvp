@@ -11,7 +11,7 @@ class Landmark:
         self.visibility = visibility
 
 
-def _remove_face_hand_pose_estimation(landmarks):
+def _remove_useless_pose_estimation(landmarks):
     for pose in USELESS_POSES:
         landmarks.pop(pose)
     return landmarks
@@ -29,5 +29,5 @@ def get_landmark_key_points(image, raw_landmarks):
             visibility=raw_landmark.visibility,
         )
         landmark_key_points[landmark.type] = landmark
-    landmark_key_points = _remove_face_hand_pose_estimation(landmark_key_points)
+    landmark_key_points = _remove_useless_pose_estimation(landmark_key_points)
     return landmark_key_points

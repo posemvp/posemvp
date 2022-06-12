@@ -4,10 +4,6 @@ import cv2 as cv
 
 
 class MountainPoseDetector(YogaDetector):
-    def _get_image(self):
-        image = cv.imread(f"pose_images/{self.__class__.__name__}.jpg")
-        return image
-
     def _get_pose_result(self, poses, image_x, image_y) -> str:
         vector_x = []
         vector_y = []

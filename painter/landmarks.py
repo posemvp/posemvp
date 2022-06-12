@@ -1,11 +1,9 @@
 from painter.draw import draw_text, draw_circle, draw_line
-from pose.landmarks import get_landmark_key_points
 
 _VISIBILITY_TOLERANCE = 0.5
 
 
-def draw_landmarks(image, raw_landmarks):
-    landmark_key_points = get_landmark_key_points(image, raw_landmarks)
+def draw_landmarks(image, landmark_key_points):
     for key, landmark_keypoint in landmark_key_points.items():
         if landmark_keypoint.visibility < _VISIBILITY_TOLERANCE:
             continue

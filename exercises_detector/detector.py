@@ -1,51 +1,62 @@
-from abc import ABC, abstractmethod
-from typing import Tuple
 import mediapipe as mp
+import cv2 as cv
+from abc import ABC, abstractmethod
+from exercises_detector.constants import ExerciseName
+from pose.landmarks import get_landmark_key_points
 
 
 class Detector(ABC):
     @abstractmethod
-    def _get_result(self, poses) -> str:
+    def get_result(self, pose_name, input_pose_landmarks) -> str:
+        pass
+
+    @abstractmethod
+    def get(self, name):
         pass
 
 
 class YogaDetector(Detector):
-    @abstractmethod
-    def _get_image(self):
-        pass
+    def get(self, name: str):
+        if name == ExerciseName.MOUNTAIN_POSE.value:
+            return MountainPoseDetector()
 
-    def _get_result(self, poses) -> str:
-        image_x, image_y = self._get_image_pose_score
-        return self._get_pose_result(poses, image_x, image_y)
+    @staticmethod
+    def _get_image(pose_name):
+        image = cv.imread(f"exercises_detector/yoga/pose_images/{pose_name}.jpg")
+        return image
 
-    @abstractmethod
-    def _get_pose_result(self, poses, image_x, image_y) -> str:
-        pass
-
-    @property
-    def _get_image_pose_score(self) -> Tuple[list, list]:
-        poses = mp.solutions.pose.Pose(
+    def _get_image_pose_score(self, pose_name):
+        image = self._get_image(pose_name)
+        pose = mp.solutions.pose.Pose(
             min_detection_confidence=0.5,
             min_tracking_confidence=0.5,
-        ).process(self._get_image())
-        image_pose_x = []
-        image_pose_y = []
-        for i in range(33):
-            image_pose_x.append(poses.pose_landmarks.landmark[i].x)
-            image_pose_y.append(poses.pose_landmarks.landmark[i].y)
-        return image_pose_x, image_pose_y
+        ).process(image)
+        pose_landmarks = pose.pose_landmarks
+        if pose_landmarks is not None:
+            return get_landmark_key_points(image, pose_landmarks)
+
+    def get_result(self, pose_name, input_pose_landmarks) -> str:
+        image_pose_landmarks = self._get_image_pose_score(pose_name)
+        return self._get_pose_result(input_pose_landmarks, image_pose_landmarks)
+
+    def _get_pose_result(self, input_pose_landmarks, image_pose_landmarks) -> str:
+        pass
+
+
+class MountainPoseDetector(YogaDetector):
+    def _get_pose_result(self, input_pose_landmarks, image_pose_landmarks) -> str:
+        return f"x:"
 
 
 class WorkoutDetector(Detector):
-    def _get_result(self, poses) -> str:
+    def get_result(self, pose_name, input_pose_landmarks) -> str:
         pass
 
+    def get(self, name):
+        if name == ExerciseName.PUSH_UP.value:
+            return PushUpDetector()
 
-class PregnancyDetector(Detector):
-    def _get_result(self, poses) -> str:
-        pass
 
-
-class RehabilitationDetector(Detector):
-    def _get_result(self, poses) -> str:
-        pass
+class PushUpDetector(WorkoutDetector):
+    def get_result(self, pose_name, input_pose_landmarks) -> str:
+        return ""
