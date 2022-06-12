@@ -1,4 +1,4 @@
-from pose.constants import LANDMARK_INDEX_TYPE_MAP
+from pose.constants import LANDMARK_INDEX_TYPE_MAP, USELESS_POSES
 
 
 class Landmarks:
@@ -15,6 +15,12 @@ class Landmark:
         self.visibility = visibility
 
 
+def _remove_face_hand_pose_estimation(landmarks):
+    for pose in USELESS_POSES:
+        landmarks.pop(pose)
+    return landmarks
+
+
 def get_landmark_key_points(image, raw_landmarks):
     image_width, image_height = image.shape[1], image.shape[0]
     landmark_key_points = {}
@@ -27,4 +33,5 @@ def get_landmark_key_points(image, raw_landmarks):
             visibility=raw_landmark.visibility,
         )
         landmark_key_points[landmark.type] = landmark
+    landmark_key_points = _remove_face_hand_pose_estimation(landmark_key_points)
     return landmark_key_points

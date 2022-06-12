@@ -40,7 +40,8 @@ if __name__ == "__main__":
     use_brect = args.use_brect
 
     # cap = cv.VideoCapture(cap_device)
-    cap = cv.VideoCapture("samples/videos/pushup.mp4")
+    # cap = cv.VideoCapture("samples/videos/pushup.mp4")
+    cap = cv.VideoCapture("samples/videos/mountain_pose.mp4")
 
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
