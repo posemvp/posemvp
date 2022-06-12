@@ -39,8 +39,8 @@ if __name__ == "__main__":
     min_tracking_confidence = args.min_tracking_confidence
     use_brect = args.use_brect
 
-    cap = cv.VideoCapture(cap_device)
-    # cap = cv.VideoCapture("samples/videos/pushup.mp4")
+    # cap = cv.VideoCapture(cap_device)
+    cap = cv.VideoCapture("samples/videos/pushup.mp4")
 
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
@@ -72,9 +72,6 @@ if __name__ == "__main__":
         #         2,
         #         cv.LINE_AA,
         #     )
-        for l in results.pose_landmarks.landmark:
-            print(l)
-        print('---------------------')
         if results.pose_landmarks is not None:
             bounding_rectangle_score = calc_bounding_rect(
                 debug_image, results.pose_landmarks
