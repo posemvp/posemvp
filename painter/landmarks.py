@@ -10,7 +10,13 @@ def draw_landmarks(image, raw_landmarks):
         if landmark_keypoint.visibility < _VISIBILITY_TOLERANCE:
             continue
         draw_circle(image, landmark_keypoint.x, landmark_keypoint.y)
-        draw_text(image, landmark_keypoint.x, landmark_keypoint.y, landmark_keypoint.z)
+        draw_text(
+            image,
+            f"z:{round(landmark_keypoint.z, 3)}",
+            (landmark_keypoint.x - 10, landmark_keypoint.y - 10),
+            0.5,
+            1,
+        )
 
     if landmark_key_points:
         if (
@@ -96,8 +102,7 @@ def draw_landmarks(image, raw_landmarks):
             )
         if (
             landmark_key_points["RIGHT_KNEE"].visibility > _VISIBILITY_TOLERANCE
-            and landmark_key_points["RIGHT_ANKLE"].visibility
-            > _VISIBILITY_TOLERANCE
+            and landmark_key_points["RIGHT_ANKLE"].visibility > _VISIBILITY_TOLERANCE
         ):
             draw_line(
                 image,

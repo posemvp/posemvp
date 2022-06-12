@@ -11,28 +11,26 @@ class EstimationResultType(Enum):
     FAILED = "FAILED"
 
 
-def draw_bounding_rect(use_brect, image, brect):
-    if use_brect:
-        cv.rectangle(image, (brect[0], brect[1]), (brect[2], brect[3]), (0, 255, 0), 2)
-    return image
-
-
-def draw_text(image, landmark_x, landmark_y, landmark_z):
+def draw_text(image, text, origin, font_scale, thickness):
     cv.putText(
         image,
-        "z:" + str(round(landmark_z, 3)),
-        (landmark_x - 10, landmark_y - 10),
+        text,
+        origin,
         cv.FONT_HERSHEY_SIMPLEX,
-        0.5,
+        font_scale,
         _GREEN_COLOR_RGB,
-        1,
+        thickness,
         cv.LINE_AA,
     )
 
 
-def draw_circle(image, landmark_x, landmark_y, _type=EstimationResultType.SUCCESS.value):
+def draw_circle(
+    image, landmark_x, landmark_y, _type=EstimationResultType.SUCCESS.value
+):
     if _type == EstimationResultType.SUCCESS.value:
-        cv.circle(image, (landmark_x, landmark_y), _KEYPOINT_RADIUS, _GREEN_COLOR_RGB, 2)
+        cv.circle(
+            image, (landmark_x, landmark_y), _KEYPOINT_RADIUS, _GREEN_COLOR_RGB, 2
+        )
     elif _type == EstimationResultType.FAILED.value:
         cv.circle(image, (landmark_x, landmark_y), _KEYPOINT_RADIUS, _RED_COLOR_RGB, 2)
 

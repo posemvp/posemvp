@@ -1,10 +1,6 @@
 from pose.constants import LANDMARK_INDEX_TYPE_MAP, USELESS_POSES
 
 
-class Landmarks:
-    pass
-
-
 class Landmark:
     def __init__(self, landmark_index, x, y, z, visibility):
         self.type = LANDMARK_INDEX_TYPE_MAP.get(landmark_index)
