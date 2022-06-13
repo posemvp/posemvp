@@ -2,6 +2,7 @@ import mediapipe as mp
 import cv2 as cv
 from abc import ABC, abstractmethod
 from exercises_detector.constants import ExerciseName
+from exercises_detector.yoga.mountain_pose import get_pose_result
 from pose.landmarks import get_landmark_key_points
 
 
@@ -45,7 +46,7 @@ class YogaDetector(Detector):
 
 class MountainPoseDetector(YogaDetector):
     def _get_pose_result(self, input_pose_landmarks, image_pose_landmarks) -> str:
-        return f"x:"
+        return get_pose_result(input_pose_landmarks, image_pose_landmarks)
 
 
 class WorkoutDetector(Detector):
