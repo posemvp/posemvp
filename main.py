@@ -54,7 +54,7 @@ if __name__ == "__main__":
     )
     cvFpsCalc = CvFpsCalc(buffer_len=10)
 
-    image = _get_image('warrior_II_pose')
+    image = _get_image("warrior_II_pose")
     pose_landmarks = pose.process(image).pose_landmarks
     sample_key_points = get_landmark_key_points(image, pose_landmarks)
 

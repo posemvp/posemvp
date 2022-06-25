@@ -7,11 +7,11 @@ def draw_landmarks(image, landmark_key_points):
     for key, landmark_keypoint in landmark_key_points.items():
         if landmark_keypoint.visibility < _VISIBILITY_TOLERANCE:
             continue
-        draw_circle(image, landmark_keypoint.x, landmark_keypoint.y)
+        draw_circle(image, landmark_keypoint.point2d[0], landmark_keypoint.point2d[1])
         draw_text(
             image,
-            f"z:{round(landmark_keypoint.z, 3)}",
-            (landmark_keypoint.x - 10, landmark_keypoint.y - 10),
+            f"z:{round(landmark_keypoint.normalizedPoint3d.z, 3)}",
+            (landmark_keypoint.point2d[0] - 10, landmark_keypoint.point2d[1] - 10),
             0.5,
             1,
         )
