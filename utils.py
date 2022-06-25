@@ -1,7 +1,7 @@
 import pytz
 from datetime import datetime
 
-IST = pytz.timezone('Asia/Kolkata')
+IST = pytz.timezone("Asia/Kolkata")
 
 
 def get_datetime_from_millis(ms: int):

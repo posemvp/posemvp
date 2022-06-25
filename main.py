@@ -40,7 +40,7 @@ def _plot_image_pose_graph(name, landmarks):
     image_vector_x = []
     image_vector_y = []
 
-    for key, key_point in landmarks.items():
+    for i, key_point in landmarks.items():
         image_vector_x.append(key_point.to_dict()["normalized_point3d"]["x"])
         image_vector_y.append(key_point.to_dict()["normalized_point3d"]["y"])
 
@@ -48,35 +48,30 @@ def _plot_image_pose_graph(name, landmarks):
     image_y_points = np.array(image_vector_y)
 
     plt.plot(image_x_points, image_y_points)
-    plt.savefig(f'samples/graphs/{name}.png')
+    plt.savefig(f"samples/graphs/{name}.png")
 
 
 if __name__ == "__main__":
     args = get_args()
-    cap_device = args.device
-    cap_width = args.width
-    cap_height = args.height
-    min_detection_confidence = args.min_detection_confidence
-    min_tracking_confidence = args.min_tracking_confidence
 
-    # cap = cv.VideoCapture(cap_device)
+    # cap = cv.VideoCapture(args.device)
     cap = cv.VideoCapture("samples/videos/warrior_II_pose.mp4")
 
-    cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
-    cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
+    cap.set(cv.CAP_PROP_FRAME_WIDTH, args.width)
+    cap.set(cv.CAP_PROP_FRAME_HEIGHT, args.height)
 
     pose = mp.solutions.pose.Pose(
-        min_detection_confidence=min_detection_confidence,
-        min_tracking_confidence=min_tracking_confidence,
+        min_detection_confidence=args.min_detection_confidence,
+        min_tracking_confidence=args.min_tracking_confidence,
     )
-    cvFpsCalc = CvFpsCalc(buffer_len=10)
 
     image_name = "warrior_II_pose"
     image = _get_image(image_name)
     pose_landmarks = pose.process(image).pose_landmarks
-    sample_key_points = get_landmark_key_points(image, pose_landmarks)
+    image_key_points = get_landmark_key_points(image, pose_landmarks)
+    # _plot_image_pose_graph(image_name, image_key_points)
 
-    _plot_image_pose_graph(image_name, sample_key_points)
+    cvFpsCalc = CvFpsCalc(buffer_len=10)
 
     while True:
         display_fps = cvFpsCalc.get()
@@ -89,7 +84,7 @@ if __name__ == "__main__":
         pose_landmarks = pose.process(image).pose_landmarks
         if pose_landmarks is not None:
             landmark_key_points = get_landmark_key_points(image, pose_landmarks)
-            compare_pose(sample_key_points, landmark_key_points)
+            compare_pose(image_key_points, landmark_key_points)
             debug_image = draw_landmarks(debug_image, landmark_key_points)
         draw_text(debug_image, "FPS:" + str(display_fps), (10, 30), 1.0, 2)
         key = cv.waitKey(27)
