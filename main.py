@@ -2,7 +2,6 @@ import copy
 import argparse
 import cv2 as cv
 import mediapipe as mp
-
 from calc.cvfpscalc import CvFpsCalc
 from painter.draw import draw_text
 from painter.landmarks import draw_landmarks
@@ -30,6 +29,10 @@ def get_args():
     return parser.parse_args()
 
 
+def _get_image(pose_name):
+    return cv.imread(f"exercises_detector/yoga/pose_images/{pose_name}.jpg")
+
+
 if __name__ == "__main__":
     args = get_args()
     cap_device = args.device
@@ -40,7 +43,7 @@ if __name__ == "__main__":
 
     # cap = cv.VideoCapture(cap_device)
     # cap = cv.VideoCapture("samples/videos/pushup.mp4")
-    cap = cv.VideoCapture("samples/videos/mountain_pose.mp4")
+    cap = cv.VideoCapture("samples/videos/warrior_II_pose.mp4")
 
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
@@ -50,6 +53,10 @@ if __name__ == "__main__":
         min_tracking_confidence=min_tracking_confidence,
     )
     cvFpsCalc = CvFpsCalc(buffer_len=10)
+
+    image = _get_image('warrior_II_pose')
+    pose_landmarks = pose.process(image).pose_landmarks
+    sample_key_points = get_landmark_key_points(image, pose_landmarks)
 
     while True:
         display_fps = cvFpsCalc.get()
@@ -62,7 +69,7 @@ if __name__ == "__main__":
         pose_landmarks = pose.process(image).pose_landmarks
         if pose_landmarks is not None:
             landmark_key_points = get_landmark_key_points(image, pose_landmarks)
-            compare_pose(landmark_key_points)
+            compare_pose(sample_key_points, landmark_key_points)
             debug_image = draw_landmarks(debug_image, landmark_key_points)
         draw_text(debug_image, "FPS:" + str(display_fps), (10, 30), 1.0, 2)
         key = cv.waitKey(27)
