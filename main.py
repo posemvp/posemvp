@@ -36,7 +36,7 @@ def _get_image(pose_name):
     return cv.imread(f"exercises_detector/yoga/pose_images/{pose_name}.jpg")
 
 
-def _plot_image_pose_graph(landmarks):
+def _plot_image_pose_graph(name, landmarks):
     image_vector_x = []
     image_vector_y = []
 
@@ -48,7 +48,7 @@ def _plot_image_pose_graph(landmarks):
     image_y_points = np.array(image_vector_y)
 
     plt.plot(image_x_points, image_y_points)
-    plt.savefig('graphs/warrior_II_pose.png')
+    plt.savefig(f'samples/graphs/{name}.png')
 
 
 if __name__ == "__main__":
@@ -71,11 +71,12 @@ if __name__ == "__main__":
     )
     cvFpsCalc = CvFpsCalc(buffer_len=10)
 
-    image = _get_image("warrior_II_pose")
+    image_name = "warrior_II_pose"
+    image = _get_image(image_name)
     pose_landmarks = pose.process(image).pose_landmarks
     sample_key_points = get_landmark_key_points(image, pose_landmarks)
 
-    # _plot_image_pose_graph(sample_key_points)
+    _plot_image_pose_graph(image_name, sample_key_points)
 
     while True:
         display_fps = cvFpsCalc.get()
