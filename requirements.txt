@@ -4,3 +4,4 @@ fastdtw==0.3.4
 scipy==1.8.1
 opencv-python==4.5.5.64
 protobuf==3.20.*
+matplotlib==3.5.2

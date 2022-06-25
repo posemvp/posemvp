@@ -1,7 +1,10 @@
 import copy
 import argparse
 import cv2 as cv
+import matplotlib.pyplot as plt
 import mediapipe as mp
+import numpy as np
+
 from calc.cvfpscalc import CvFpsCalc
 from painter.draw import draw_text
 from painter.landmarks import draw_landmarks
@@ -33,6 +36,21 @@ def _get_image(pose_name):
     return cv.imread(f"exercises_detector/yoga/pose_images/{pose_name}.jpg")
 
 
+def _plot_image_pose_graph(landmarks):
+    image_vector_x = []
+    image_vector_y = []
+
+    for key, key_point in landmarks.items():
+        image_vector_x.append(key_point.to_dict()["normalized_point3d"]["x"])
+        image_vector_y.append(key_point.to_dict()["normalized_point3d"]["y"])
+
+    image_x_points = np.array(image_vector_x)
+    image_y_points = np.array(image_vector_y)
+
+    plt.plot(image_x_points, image_y_points)
+    plt.savefig('graphs/warrior_II_pose.png')
+
+
 if __name__ == "__main__":
     args = get_args()
     cap_device = args.device
@@ -42,7 +60,6 @@ if __name__ == "__main__":
     min_tracking_confidence = args.min_tracking_confidence
 
     # cap = cv.VideoCapture(cap_device)
-    # cap = cv.VideoCapture("samples/videos/pushup.mp4")
     cap = cv.VideoCapture("samples/videos/warrior_II_pose.mp4")
 
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
@@ -57,6 +74,8 @@ if __name__ == "__main__":
     image = _get_image("warrior_II_pose")
     pose_landmarks = pose.process(image).pose_landmarks
     sample_key_points = get_landmark_key_points(image, pose_landmarks)
+
+    # _plot_image_pose_graph(sample_key_points)
 
     while True:
         display_fps = cvFpsCalc.get()
@@ -76,6 +95,7 @@ if __name__ == "__main__":
         if key == 27:
             break
         cv.imshow("Posemvp Demo", debug_image)
+    plt.show()
     cap.release()
     cv.waitKey(0)
     cv.destroyAllWindows()
