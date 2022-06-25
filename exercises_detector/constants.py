@@ -11,3 +11,4 @@ class ExerciseType(Enum):
 class ExerciseName(Enum):
     PUSH_UP = "PUSH_UP"
     MOUNTAIN_POSE = "MOUNTAIN_POSE"
+    WARRIOR_II_POSE = "WARRIOR_II_POSE"

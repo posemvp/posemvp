@@ -17,6 +17,8 @@ class YogaDetector(Detector):
     def get(self, name: str):
         if name == ExerciseName.MOUNTAIN_POSE.value:
             return MountainPoseDetector()
+        if name == ExerciseName.WARRIOR_II_POSE.value:
+            return WarriorIIPoseDetector()
 
     def get_result(self, image_pose_landmarks, input_pose_landmarks) -> str:
         return self._get_pose_result(input_pose_landmarks, image_pose_landmarks)
@@ -26,6 +28,11 @@ class YogaDetector(Detector):
 
 
 class MountainPoseDetector(YogaDetector):
+    def _get_pose_result(self, input_pose_landmarks, image_pose_landmarks) -> str:
+        return get_pose_result(input_pose_landmarks, image_pose_landmarks)
+
+
+class WarriorIIPoseDetector(YogaDetector):
     def _get_pose_result(self, input_pose_landmarks, image_pose_landmarks) -> str:
         return get_pose_result(input_pose_landmarks, image_pose_landmarks)
 
