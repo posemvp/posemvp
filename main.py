@@ -85,7 +85,13 @@ if __name__ == "__main__":
         if pose_landmarks is not None:
             landmark_key_points = get_landmark_key_points(image, pose_landmarks)
             pose_result = compare_pose(image_key_points, landmark_key_points)
-            draw_text(debug_image, "Comparison_score: " + str(pose_result[0]), (10, 30), 1.0, 2)
+            draw_text(
+                debug_image,
+                "Comparison_score: " + str(pose_result[0]),
+                (10, 30),
+                1.0,
+                2,
+            )
             debug_image = draw_landmarks(debug_image, landmark_key_points)
         draw_text(debug_image, "FPS: " + str(display_fps), (10, 70), 1.0, 2)
         key = cv.waitKey(27)

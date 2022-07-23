@@ -25,17 +25,23 @@ class YogaDetector(Detector):
     def get_result(self, image_pose_landmarks, input_pose_landmarks) -> List[float]:
         return self._get_pose_result(input_pose_landmarks, image_pose_landmarks)
 
-    def _get_pose_result(self, input_pose_landmarks, image_pose_landmarks) -> List[float]:
+    def _get_pose_result(
+        self, input_pose_landmarks, image_pose_landmarks
+    ) -> List[float]:
         pass
 
 
 class MountainPoseDetector(YogaDetector):
-    def _get_pose_result(self, input_pose_landmarks, image_pose_landmarks) -> List[float]:
+    def _get_pose_result(
+        self, input_pose_landmarks, image_pose_landmarks
+    ) -> List[float]:
         return get_mountain_pose_result(input_pose_landmarks, image_pose_landmarks)
 
 
 class WarriorIIPoseDetector(YogaDetector):
-    def _get_pose_result(self, input_pose_landmarks, image_pose_landmarks) -> List[float]:
+    def _get_pose_result(
+        self, input_pose_landmarks, image_pose_landmarks
+    ) -> List[float]:
         return get_warrior_II_pose_result(input_pose_landmarks, image_pose_landmarks)
 
 

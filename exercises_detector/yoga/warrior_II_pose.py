@@ -3,7 +3,9 @@ import numpy as np
 from dtaidistance import dtw
 
 
-def get_warrior_II_pose_result(input_pose_landmarks, image_pose_landmarks) -> List[float]:
+def get_warrior_II_pose_result(
+    input_pose_landmarks, image_pose_landmarks
+) -> List[float]:
     input_vector_x = []
     input_vector_y = []
     image_vector_x = []
