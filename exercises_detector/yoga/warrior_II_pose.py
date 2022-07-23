@@ -1,6 +1,6 @@
 from typing import List
 import numpy as np
-from dtaidistance import dtw
+from calc.dtw_distance import get_dtw_distance
 
 
 def get_warrior_II_pose_result(
@@ -24,6 +24,6 @@ def get_warrior_II_pose_result(
     image_x_points = np.array(image_vector_x)
     image_y_points = np.array(image_vector_y)
 
-    x_distance = dtw.distance(input_x_points, image_x_points)
-    # y_distance = dtw.distance(input_y_points, image_y_points)
+    x_distance = get_dtw_distance(input_x_points, image_x_points)
+    # y_distance = get_dtw_distance(input_y_points, image_y_points)
     return [x_distance]

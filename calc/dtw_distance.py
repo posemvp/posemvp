@@ -1,7 +1,5 @@
-from scipy.spatial.distance import euclidean
-from fastdtw import fastdtw
+from dtaidistance import dtw
 
 
 def get_dtw_distance(vec1, vec2):
-    distance, path = fastdtw(vec1, vec2, dist=euclidean)
-    return distance
+    return dtw.distance(vec1, vec2)
