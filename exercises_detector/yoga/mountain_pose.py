@@ -1,8 +1,7 @@
-import matplotlib.pyplot as plt
 import numpy as np
 
 
-def get_pose_result(input_pose_landmarks, image_pose_landmarks):
+def get_mountain_pose_result(input_pose_landmarks, image_pose_landmarks):
     input_vector_x = []
     input_vector_y = []
     image_vector_x = []
@@ -20,6 +19,3 @@ def get_pose_result(input_pose_landmarks, image_pose_landmarks):
     input_y_points = np.array(input_vector_y)
     image_x_points = np.array(image_vector_x)
     image_y_points = np.array(image_vector_y)
-
-    plt.plot(input_x_points, input_y_points)
-    plt.pause(0.05)

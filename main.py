@@ -4,7 +4,6 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 import mediapipe as mp
 import numpy as np
-
 from calc.cvfpscalc import CvFpsCalc
 from painter.draw import draw_text
 from painter.landmarks import draw_landmarks
@@ -49,6 +48,7 @@ def _plot_image_pose_graph(name, landmarks):
 
     plt.plot(image_x_points, image_y_points)
     plt.savefig(f"samples/graphs/{name}.png")
+    plt.show()
 
 
 if __name__ == "__main__":
@@ -84,14 +84,14 @@ if __name__ == "__main__":
         pose_landmarks = pose.process(image).pose_landmarks
         if pose_landmarks is not None:
             landmark_key_points = get_landmark_key_points(image, pose_landmarks)
-            compare_pose(image_key_points, landmark_key_points)
+            pose_result = compare_pose(image_key_points, landmark_key_points)
+            draw_text(debug_image, "Comparison_score: " + str(pose_result[0]), (10, 30), 1.0, 2)
             debug_image = draw_landmarks(debug_image, landmark_key_points)
-        draw_text(debug_image, "FPS:" + str(display_fps), (10, 30), 1.0, 2)
+        draw_text(debug_image, "FPS: " + str(display_fps), (10, 70), 1.0, 2)
         key = cv.waitKey(27)
         if key == 27:
             break
         cv.imshow("Posemvp Demo", debug_image)
-    plt.show()
     cap.release()
     cv.waitKey(0)
     cv.destroyAllWindows()
