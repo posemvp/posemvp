@@ -11,7 +11,7 @@ class Detector(ABC):
     @abstractmethod
     def get_result(
         self, image_pose_landmarks, input_pose_landmarks, image_joint_angles: dict
-    ) -> List[float]:
+    ) -> dict:
         pass
 
     @staticmethod
@@ -32,28 +32,28 @@ class YogaDetector(Detector):
 
     def get_result(
         self, image_pose_landmarks, input_pose_landmarks, image_joint_angles: dict
-    ) -> List[float]:
+    ) -> dict:
         return self._get_pose_result(
             input_pose_landmarks, image_pose_landmarks, image_joint_angles
         )
 
     def _get_pose_result(
         self, input_pose_landmarks, image_pose_landmarks, image_joint_angles
-    ) -> List[float]:
+    ) -> dict:
         pass
 
 
 class MountainPoseDetector(YogaDetector):
     def _get_pose_result(
         self, input_pose_landmarks, image_pose_landmarks, image_joint_angles
-    ) -> List[float]:
+    ) -> dict:
         return get_mountain_pose_result(input_pose_landmarks, image_pose_landmarks)
 
 
 class WarriorIIPoseDetector(YogaDetector):
     def _get_pose_result(
         self, input_pose_landmarks, image_pose_landmarks, image_joint_angles
-    ) -> List[float]:
+    ) -> dict:
         return get_warrior_II_pose_result(
             input_pose_landmarks,
             image_pose_landmarks,
@@ -76,7 +76,7 @@ class WorkoutDetector(Detector):
 class PushUpDetector(WorkoutDetector):
     def _get_pose_result(
         self, input_pose_landmarks, image_pose_landmarks, image_joint_angles
-    ) -> List[float]:
+    ) -> dict:
         return get_pushup_pose_result(
             input_pose_landmarks,
             image_pose_landmarks,

@@ -87,7 +87,7 @@ if __name__ == "__main__":
             pose_result = compare_pose(image_key_points, landmark_key_points)
             draw_text(
                 debug_image,
-                "Comparison_score: " + str(pose_result[0]),
+                "Comparison_score: " + str(pose_result["comparison_score"]),
                 (10, 30),
                 1.0,
                 2,
