@@ -1,3 +1,4 @@
+import numpy as np
 from pose.constants import LANDMARK_INDEX_TYPE_MAP, USELESS_POSES
 
 
@@ -38,6 +39,12 @@ def _remove_useless_pose_estimation(landmarks):
     return landmarks
 
 
+def _get_normalized_landmark_point(landmark) -> NormalizedPoint3D:
+    normalize_coordinate = (landmark.x, landmark.y)
+    normalize_coordinate = normalize_coordinate / np.linalg.norm(normalize_coordinate)
+    return NormalizedPoint3D(normalize_coordinate[0], normalize_coordinate[1], landmark.z)
+
+
 def get_landmark_key_points(image, raw_landmarks):
     image_width, image_height = image.shape[1], image.shape[0]
     landmark_key_points = {}
@@ -48,9 +55,7 @@ def get_landmark_key_points(image, raw_landmarks):
                 x=min(int(raw_landmark.x * image_width), image_width - 1),
                 y=min(int(raw_landmark.y * image_height), image_height - 1),
             ),
-            normalizedPoint3d=NormalizedPoint3D(
-                raw_landmark.x, raw_landmark.y, raw_landmark.z
-            ),
+            normalizedPoint3d=_get_normalized_landmark_point(raw_landmark),
             visibility=raw_landmark.visibility,
         )
         landmark_key_points[landmark.type] = landmark
