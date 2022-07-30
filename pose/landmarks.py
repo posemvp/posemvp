@@ -42,7 +42,9 @@ def _remove_useless_pose_estimation(landmarks):
 def _get_normalized_landmark_point(landmark) -> NormalizedPoint3D:
     normalize_coordinate = (landmark.x, landmark.y)
     normalize_coordinate = normalize_coordinate / np.linalg.norm(normalize_coordinate)
-    return NormalizedPoint3D(normalize_coordinate[0], normalize_coordinate[1], landmark.z)
+    return NormalizedPoint3D(
+        normalize_coordinate[0], normalize_coordinate[1], landmark.z
+    )
 
 
 def get_landmark_key_points(image, raw_landmarks):

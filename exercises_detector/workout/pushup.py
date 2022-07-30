@@ -1,45 +1,29 @@
-from calc.angle import find_angle
-from exercises_detector.detector import WorkoutDetector
+from typing import List
+import numpy as np
+from calc.dtw_distance import get_dtw_distance
 
 
-class PushUpDetector(WorkoutDetector):
-    def get_result(self, poses) -> str:
-        feedbackList = []
-        if (
-            poses.pose_landmarks.landmark[11].visibility > 0.8
-            and poses.pose_landmarks.landmark[13].visibility > 0.8
-            and poses.pose_landmarks.landmark[15].visibility > 0.8
-            and poses.pose_landmarks.landmark[23].visibility > 0.8
-            and poses.pose_landmarks.landmark[25].visibility > 0.8
-        ) or (
-            poses.pose_landmarks.landmark[12].visibility > 0.8
-            and poses.pose_landmarks.landmark[14].visibility > 0.8
-            and poses.pose_landmarks.landmark[16].visibility > 0.8
-            and poses.pose_landmarks.landmark[24].visibility > 0.8
-            and poses.pose_landmarks.landmark[26].visibility > 0.8
-        ):
-            right_hand_shoulder_angle = find_angle(
-                poses.pose_landmarks.landmark[11],
-                poses.pose_landmarks.landmark[13],
-                poses.pose_landmarks.landmark[15],
-            )
-            left_hand_shoulder_angle = find_angle(
-                poses.pose_landmarks.landmark[12],
-                poses.pose_landmarks.landmark[14],
-                poses.pose_landmarks.landmark[16],
-            )
-            right_leg_hip_angle = find_angle(
-                poses.pose_landmarks.landmark[11],
-                poses.pose_landmarks.landmark[23],
-                poses.pose_landmarks.landmark[25],
-            )
-            left_leg_hip_angle = find_angle(
-                poses.pose_landmarks.landmark[12],
-                poses.pose_landmarks.landmark[24],
-                poses.pose_landmarks.landmark[26],
-            )
-            if right_hand_shoulder_angle < 45 or left_hand_shoulder_angle < 45:
-                feedbackList.append("Dont go to lower")
-            if left_leg_hip_angle < 150 or right_leg_hip_angle < 150:
-                feedbackList.append("Straight your waist")
-        return str(feedbackList)
+def get_pushup_pose_result(
+    input_pose_landmarks, image_pose_landmarks, image_joint_angles, input_joint_angles
+) -> List[float]:
+    input_vector_x = []
+    input_vector_y = []
+    image_vector_x = []
+    image_vector_y = []
+
+    for key, key_point in input_pose_landmarks.items():
+        input_vector_x.append(key_point.to_dict()["normalized_point3d"]["x"])
+        input_vector_y.append(key_point.to_dict()["normalized_point3d"]["y"])
+
+    for key, key_point in image_pose_landmarks.items():
+        image_vector_x.append(key_point.to_dict()["normalized_point3d"]["x"])
+        image_vector_y.append(key_point.to_dict()["normalized_point3d"]["y"])
+
+    input_x_points = np.array(input_vector_x)
+    input_y_points = np.array(input_vector_y)
+    image_x_points = np.array(image_vector_x)
+    image_y_points = np.array(image_vector_y)
+
+    x_distance = get_dtw_distance(input_x_points, image_x_points)
+    # y_distance = get_dtw_distance(input_y_points, image_y_points)
+    return [x_distance]

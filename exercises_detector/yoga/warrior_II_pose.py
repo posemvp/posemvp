@@ -4,7 +4,7 @@ from calc.dtw_distance import get_dtw_distance
 
 
 def get_warrior_II_pose_result(
-    input_pose_landmarks, image_pose_landmarks
+    input_pose_landmarks, image_pose_landmarks, image_joint_angles, input_joint_angles
 ) -> List[float]:
     input_vector_x = []
     input_vector_y = []

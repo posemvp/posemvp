@@ -1,14 +1,22 @@
 from abc import ABC, abstractmethod
 from typing import List
 from exercises_detector.constants import ExerciseName
+from exercises_detector.workout.pushup import get_pushup_pose_result
 from exercises_detector.yoga.mountain_pose import get_mountain_pose_result
 from exercises_detector.yoga.warrior_II_pose import get_warrior_II_pose_result
+from pose.joint_angles import get_joint_angles
 
 
 class Detector(ABC):
     @abstractmethod
-    def get_result(self, image_pose_landmarks, input_pose_landmarks) -> List[float]:
+    def get_result(
+        self, image_pose_landmarks, input_pose_landmarks, image_joint_angles: dict
+    ) -> List[float]:
         pass
+
+    @staticmethod
+    def get_joint_angles(landmarks) -> dict:
+        return get_joint_angles(landmarks)
 
     @abstractmethod
     def get(self, name):
@@ -22,31 +30,42 @@ class YogaDetector(Detector):
         if name == ExerciseName.WARRIOR_II_POSE.value:
             return WarriorIIPoseDetector()
 
-    def get_result(self, image_pose_landmarks, input_pose_landmarks) -> List[float]:
-        return self._get_pose_result(input_pose_landmarks, image_pose_landmarks)
+    def get_result(
+        self, image_pose_landmarks, input_pose_landmarks, image_joint_angles: dict
+    ) -> List[float]:
+        return self._get_pose_result(
+            input_pose_landmarks, image_pose_landmarks, image_joint_angles
+        )
 
     def _get_pose_result(
-        self, input_pose_landmarks, image_pose_landmarks
+        self, input_pose_landmarks, image_pose_landmarks, image_joint_angles
     ) -> List[float]:
         pass
 
 
 class MountainPoseDetector(YogaDetector):
     def _get_pose_result(
-        self, input_pose_landmarks, image_pose_landmarks
+        self, input_pose_landmarks, image_pose_landmarks, image_joint_angles
     ) -> List[float]:
         return get_mountain_pose_result(input_pose_landmarks, image_pose_landmarks)
 
 
 class WarriorIIPoseDetector(YogaDetector):
     def _get_pose_result(
-        self, input_pose_landmarks, image_pose_landmarks
+        self, input_pose_landmarks, image_pose_landmarks, image_joint_angles
     ) -> List[float]:
-        return get_warrior_II_pose_result(input_pose_landmarks, image_pose_landmarks)
+        return get_warrior_II_pose_result(
+            input_pose_landmarks,
+            image_pose_landmarks,
+            image_joint_angles,
+            super(WarriorIIPoseDetector, self).get_joint_angles(input_pose_landmarks),
+        )
 
 
 class WorkoutDetector(Detector):
-    def get_result(self, image_pose_landmarks, input_pose_landmarks) -> List[float]:
+    def get_result(
+        self, image_pose_landmarks, input_pose_landmarks, image_joint_angles: dict
+    ) -> List[float]:
         pass
 
     def get(self, name):
@@ -55,5 +74,12 @@ class WorkoutDetector(Detector):
 
 
 class PushUpDetector(WorkoutDetector):
-    def get_result(self, pose_name, input_pose_landmarks) -> List[float]:
-        pass
+    def _get_pose_result(
+        self, input_pose_landmarks, image_pose_landmarks, image_joint_angles
+    ) -> List[float]:
+        return get_pushup_pose_result(
+            input_pose_landmarks,
+            image_pose_landmarks,
+            image_joint_angles,
+            super(PushUpDetector, self).get_joint_angles(input_pose_landmarks),
+        )
