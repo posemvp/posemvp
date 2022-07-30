@@ -92,7 +92,9 @@ if __name__ == "__main__":
                 1.0,
                 2,
             )
-            debug_image = draw_landmarks(debug_image, landmark_key_points)
+            debug_image = draw_landmarks(
+                debug_image, landmark_key_points, pose_result["key_points_correctness"]
+            )
         draw_text(debug_image, "FPS: " + str(display_fps), (10, 70), 1.0, 2)
         key = cv.waitKey(27)
         if key == 27:

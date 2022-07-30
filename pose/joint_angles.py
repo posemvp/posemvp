@@ -75,37 +75,41 @@ def __get_angle_diff(ang1, ang2):
     return 180 - abs(abs(ang1 - ang2) - 180)
 
 
-def __is_wrong_angle(ang1, ang2) -> bool:
+def __is_correct_keypoint(ang1, ang2) -> bool:
     _TOLERANCE_ANGLE_DIFF = 5
     if round(__get_angle_diff(ang1, ang2), 2) <= _TOLERANCE_ANGLE_DIFF:
         return True
     return False
 
 
-def get_angle_comparison(sample_angles: dict, input_angles: dict) -> dict:
+def get_key_points_correctness(sample_angles: dict, input_angles: dict) -> dict:
     return {
-        "RIGHT_ELBOW_ANGLE": __is_wrong_angle(
+        "RIGHT_ELBOW": __is_correct_keypoint(
             sample_angles["RIGHT_ELBOW_ANGLE"], input_angles["RIGHT_ELBOW_ANGLE"]
         ),
-        "RIGHT_SHOULDER_ANGLE": __is_wrong_angle(
+        "RIGHT_SHOULDER": __is_correct_keypoint(
             sample_angles["RIGHT_SHOULDER_ANGLE"], input_angles["RIGHT_SHOULDER_ANGLE"]
         ),
-        "RIGHT_HIP_ANGLE": __is_wrong_angle(
+        "RIGHT_HIP": __is_correct_keypoint(
             sample_angles["RIGHT_HIP_ANGLE"], input_angles["RIGHT_HIP_ANGLE"]
         ),
-        "RIGHT_KNEE_ANGLE": __is_wrong_angle(
+        "RIGHT_KNEE": __is_correct_keypoint(
             sample_angles["RIGHT_KNEE_ANGLE"], input_angles["RIGHT_KNEE_ANGLE"]
         ),
-        "LEFT_ELBOW_ANGLE": __is_wrong_angle(
+        "LEFT_ELBOW": __is_correct_keypoint(
             sample_angles["LEFT_ELBOW_ANGLE"], input_angles["LEFT_ELBOW_ANGLE"]
         ),
-        "LEFT_SHOULDER_ANGLE": __is_wrong_angle(
+        "LEFT_SHOULDER": __is_correct_keypoint(
             sample_angles["LEFT_SHOULDER_ANGLE"], input_angles["LEFT_SHOULDER_ANGLE"]
         ),
-        "LEFT_HIP_ANGLE": __is_wrong_angle(
+        "LEFT_HIP": __is_correct_keypoint(
             sample_angles["LEFT_HIP_ANGLE"], input_angles["LEFT_HIP_ANGLE"]
         ),
-        "LEFT_KNEE_ANGLE": __is_wrong_angle(
+        "LEFT_KNEE": __is_correct_keypoint(
             sample_angles["LEFT_KNEE_ANGLE"], input_angles["LEFT_KNEE_ANGLE"]
         ),
+        "RIGHT_WRIST": True,
+        "LEFT_WRIST": True,
+        "RIGHT_ANKLE": True,
+        "LEFT_ANKLE": True,
     }

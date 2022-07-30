@@ -2,7 +2,7 @@ from enum import Enum
 import cv2 as cv
 
 _GREEN_COLOR_RGB = (0, 255, 0)
-_RED_COLOR_RGB = (0, 255, 0)
+_RED_COLOR_RGB = (0, 0, 255)
 _KEYPOINT_RADIUS = 5
 
 

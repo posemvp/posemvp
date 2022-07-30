@@ -1,5 +1,5 @@
 from calc.dtw_distance import get_dtw_distance
-from pose.joint_angles import get_angle_comparison
+from pose.joint_angles import get_key_points_correctness
 from pose.landmarks import get_landmarks_vectors
 
 
@@ -17,7 +17,7 @@ def get_warrior_II_pose_result(
     # y_distance = get_dtw_distance(input_key_points_vector_y, image_key_points_vector_y)
     return {
         "comparison_score": x_distance,
-        "angle_comparison": get_angle_comparison(
+        "key_points_correctness": get_key_points_correctness(
             image_joint_angles, input_joint_angles
         ),
     }
