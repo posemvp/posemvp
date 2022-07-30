@@ -68,7 +68,9 @@ def hconcat_2_videos_list(frame_list1, frame_list2):
 def get_cos_two_vector(
     vector1, vector2
 ):  # Returns the cosine similarity of two vectors
-    return np.dot(vector1, vector2) / (np.linalg.norm(vector1) * np.linalg.norm(vector2))
+    return np.dot(vector1, vector2) / (
+        np.linalg.norm(vector1) * np.linalg.norm(vector2)
+    )
 
 
 def get_euclidean_distance(

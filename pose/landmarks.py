@@ -1,4 +1,6 @@
 import numpy as np
+from numpy import ndarray
+from typing import Tuple
 from pose.constants import LANDMARK_INDEX_TYPE_MAP, USELESS_POSES
 
 
@@ -63,3 +65,12 @@ def get_landmark_key_points(image, raw_landmarks):
         landmark_key_points[landmark.type] = landmark
     landmark_key_points = _remove_useless_pose_estimation(landmark_key_points)
     return landmark_key_points
+
+
+def get_landmarks_vectors(landmarks) -> Tuple[ndarray, ndarray]:
+    vector_x = []
+    vector_y = []
+    for key, key_point in landmarks.items():
+        vector_x.append(key_point.normalizedPoint3d.x)
+        vector_y.append(key_point.normalizedPoint3d.y)
+    return np.array(vector_x), np.array(vector_y)
