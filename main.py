@@ -4,7 +4,7 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 import mediapipe as mp
 import numpy as np
-from calc.cvfpscalc import CvFpsCalc
+from pose.calc.cvfpscalc import CvFpsCalc
 from painter.draw import draw_text
 from painter.landmarks import draw_landmarks
 from pose.compare import compare_pose

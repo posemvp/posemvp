@@ -1,4 +1,4 @@
-from calc.dtw_distance import get_dtw_distance
+from pose.calc.dtw_distance import get_dtw_distance
 from pose.joint_angles import get_key_points_correctness
 from pose.landmarks import get_landmarks_vectors
 
