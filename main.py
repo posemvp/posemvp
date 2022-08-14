@@ -1,5 +1,4 @@
 import copy
-import argparse
 import cv2 as cv
 import matplotlib.pyplot as plt
 import mediapipe as mp
@@ -9,26 +8,6 @@ from painter.draw import draw_text
 from painter.landmarks import draw_landmarks
 from pose.compare import compare_pose
 from pose.landmarks import get_landmark_key_points
-
-
-def get_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--device", type=int, default=0)
-    parser.add_argument("--width", help="cap width", type=int, default=960)
-    parser.add_argument("--height", help="cap height", type=int, default=540)
-    parser.add_argument(
-        "--min_detection_confidence",
-        help="min_detection_confidence",
-        type=float,
-        default=0.5,
-    )
-    parser.add_argument(
-        "--min_tracking_confidence",
-        help="min_tracking_confidence",
-        type=int,
-        default=0.5,
-    )
-    return parser.parse_args()
 
 
 def _get_image(pose_name):
@@ -51,19 +30,16 @@ def _plot_image_pose_graph(name, landmarks):
     plt.show()
 
 
-if __name__ == "__main__":
-    args = get_args()
+def generate_pose(pose_name: str = None):
+    if pose_name is None:
+        cap = cv.VideoCapture(0)
+    else:
+        cap = cv.VideoCapture(f"samples/videos/{pose_name}.mp4")
 
-    # cap = cv.VideoCapture(args.device)
-    cap = cv.VideoCapture("samples/videos/warrior_II_pose.mp4")
+    cap.set(cv.CAP_PROP_FRAME_WIDTH, 960)
+    cap.set(cv.CAP_PROP_FRAME_HEIGHT, 540)
 
-    cap.set(cv.CAP_PROP_FRAME_WIDTH, args.width)
-    cap.set(cv.CAP_PROP_FRAME_HEIGHT, args.height)
-
-    pose = mp.solutions.pose.Pose(
-        min_detection_confidence=args.min_detection_confidence,
-        min_tracking_confidence=args.min_tracking_confidence,
-    )
+    pose = mp.solutions.pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
     image_name = "warrior_II_pose"
     image = _get_image(image_name)
@@ -95,11 +71,19 @@ if __name__ == "__main__":
             debug_image = draw_landmarks(
                 debug_image, landmark_key_points, pose_result["key_points_correctness"]
             )
-        draw_text(debug_image, "FPS: " + str(display_fps), (10, 70), 1.0, 2)
-        key = cv.waitKey(27)
-        if key == 27:
-            break
-        cv.imshow("Posemvp Demo", debug_image)
-    cap.release()
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+        debug_image = draw_text(debug_image, "FPS: " + str(display_fps), (10, 70), 1.0, 2)
+        ret, buffer = cv.imencode('.jpg', debug_image)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    #     key = cv.waitKey(27)
+    #     if key == 27:
+    #         break
+    #     cv.imshow("Posemvp Demo", debug_image)
+    # cap.release()
+    # cv.waitKey(0)
+    # cv.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    generate_pose()

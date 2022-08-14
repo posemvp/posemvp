@@ -22,6 +22,7 @@ def draw_text(image, text, origin, font_scale, thickness):
         thickness,
         cv.LINE_AA,
     )
+    return image
 
 
 def draw_circle(

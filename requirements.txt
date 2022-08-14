@@ -5,3 +5,5 @@ opencv-python==4.5.5.64
 protobuf==3.20.*
 matplotlib==3.5.2
 dtaidistance==2.3.9
+flask==2.2.1
+Flask-SocketIO==5.2.0
